@@ -30,6 +30,7 @@ public static class DependencyInjection
         services.AddSingleton<IRecurringBillRepository, RecurringBillRepository>();
         services.AddSingleton<IBillRepository, BillRepository>();
         services.AddSingleton<IReportQueries, ReportQueries>();
+        services.AddSingleton<IDatabaseInitializer, LocalDbInitializer>();
 
         return services;
     }

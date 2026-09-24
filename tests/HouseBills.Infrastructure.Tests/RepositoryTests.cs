@@ -3,6 +3,10 @@ using HouseBills.Application.Common;
 using HouseBills.Application.Persistence;
 using HouseBills.Domain;
 
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace HouseBills.Infrastructure.Tests;
 
 [Collection(SqlServerCollection.Name)]
@@ -82,6 +86,34 @@ public sealed class RepositoryTests(SqlServerFixture fixture)
         await fixture.Get<IBillRepository>().AddAsync(new Bill("Gas", payee.Id, 1, 5m, SqlServerFixture.Today, null), Ct);
 
         (await payees.IsInUseAsync(payee.Id, Ct)).ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task InitializeAsync_NonLocalDbServer_LeavesSchemaUntouched()
+    {
+        var connectionString = new SqlConnectionStringBuilder(fixture.ConnectionString)
+        {
+            InitialCatalog = $"NotCreated_{Guid.NewGuid():N}",
+        };
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                [$"ConnectionStrings:{DependencyInjection.ConnectionStringName}"] = connectionString.ConnectionString,
+            })
+            .Build();
+        await using var services = new ServiceCollection()
+            .AddLogging()
+            .AddInfrastructure(configuration)
+            .BuildServiceProvider();
+
+        await services.GetRequiredService<IDatabaseInitializer>().InitializeAsync(Ct);
+
+        await using var master = new SqlConnection(fixture.ConnectionString);
+        await master.OpenAsync(Ct);
+        await using var command = master.CreateCommand();
+        command.CommandText = "SELECT DB_ID(@name)";
+        command.Parameters.AddWithValue("@name", connectionString.InitialCatalog);
+        (await command.ExecuteScalarAsync(Ct)).ShouldBe(DBNull.Value);
     }
 
     private static string Unique(string name) => $"{name} {Guid.NewGuid():N}";

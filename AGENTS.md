@@ -114,6 +114,7 @@ Rules:
   - `dotnet ef migrations add <Name> -p src/MyApp.Infrastructure -s src/MyApp.Wpf` (or `-s src/MyApp.Api`)
   - Review every generated migration before committing. Never edit an applied migration; add a new one.
   - Production deployment uses generated idempotent scripts (`dotnet ef migrations script --idempotent`), not `Database.Migrate()` at app startup on client machines.
+  - **Exception — LocalDB only:** when the connection string points at SQL Server LocalDB (`(localdb)\...`), the app creates/migrates the database at startup (`LocalDbInitializer`), because a LocalDB database is private to one Windows user and is the only way the installer-based, per-PC deployment works without manual steps. It also re-attaches a LocalDB database whose files exist but which is no longer registered. Any other server (shared SQL Server / API mode) is never migrated by the client.
 
 ### Dapper (reporting, complex/performance-critical SQL, stored procedures)
 - Lives in `MyApp.Infrastructure` behind Application interfaces (e.g. `IReportQueries`).

@@ -27,6 +27,9 @@ public sealed class SqlServerFixture : IAsyncLifetime
 
     public IServiceProvider Services { get; private set; } = null!;
 
+    /// <summary>Connection string to the container's master database.</summary>
+    public string ConnectionString => _container.GetConnectionString();
+
     public async ValueTask InitializeAsync()
     {
         await _container.StartAsync();

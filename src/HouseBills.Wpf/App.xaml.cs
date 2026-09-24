@@ -1,8 +1,10 @@
 using System.Globalization;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Threading;
 
+using HouseBills.Application.Common;
 using HouseBills.Wpf.Hosting;
 using HouseBills.Wpf.Views;
 
@@ -45,6 +47,8 @@ public partial class App : System.Windows.Application
             return;
         }
 
+        await InitializeDatabaseAsync(_host.Services);
+
         var window = _host.Services.GetRequiredService<MainWindow>();
         MainWindow = window;
         window.Show();
@@ -54,6 +58,32 @@ public partial class App : System.Windows.Application
     {
         _host?.Dispose();
         base.OnExit(e);
+    }
+
+    /// <summary>
+    /// Creates/upgrades a private LocalDB database before the first page loads. On failure the window still opens
+    /// (pages then report the problem) so the user isn't left with nothing.
+    /// </summary>
+    private async Task InitializeDatabaseAsync(IServiceProvider services)
+    {
+        Mouse.OverrideCursor = Cursors.Wait;
+        try
+        {
+            await services.GetRequiredService<IDatabaseInitializer>().InitializeAsync(CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            Logger?.LogError(ex, "Database initialization failed.");
+            MessageBox.Show(
+                "HouseBills could not prepare its database. The error has been logged; please try restarting the application.",
+                "HouseBills",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+        finally
+        {
+            Mouse.OverrideCursor = null;
+        }
     }
 
     private void RegisterGlobalExceptionHandlers()
