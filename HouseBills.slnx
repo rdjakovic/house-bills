@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/HouseBills.Application/HouseBills.Application.csproj" />
+    <Project Path="src/HouseBills.Domain/HouseBills.Domain.csproj" />
+    <Project Path="src/HouseBills.Infrastructure/HouseBills.Infrastructure.csproj" />
+    <Project Path="src/HouseBills.Wpf/HouseBills.Wpf.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/HouseBills.Application.Tests/HouseBills.Application.Tests.csproj" />
+    <Project Path="tests/HouseBills.Domain.Tests/HouseBills.Domain.Tests.csproj" />
+    <Project Path="tests/HouseBills.Infrastructure.Tests/HouseBills.Infrastructure.Tests.csproj" />
+    <Project Path="tests/HouseBills.Wpf.Tests/HouseBills.Wpf.Tests.csproj" />
+  </Folder>
+</Solution>

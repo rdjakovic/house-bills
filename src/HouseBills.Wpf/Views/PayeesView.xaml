@@ -1,0 +1,59 @@
+<UserControl x:Class="HouseBills.Wpf.Views.PayeesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:HouseBills.Wpf.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:PayeesViewModel}"
+             d:DesignWidth="1000"
+             d:DesignHeight="700">
+    <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Text="{Binding Title}" Style="{StaticResource PageTitleStyle}" />
+
+        <StackPanel DockPanel.Dock="Top" Style="{StaticResource ToolbarStyle}">
+            <Button Content="New payee" Command="{Binding NewCommand}" Style="{StaticResource AccentToolbarButtonStyle}" />
+            <Button Content="Edit" Command="{Binding EditCommand}" Style="{StaticResource ToolbarButtonStyle}" />
+            <Button Content="Delete" Command="{Binding DeleteCommand}" Style="{StaticResource ToolbarButtonStyle}" />
+        </StackPanel>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <DataGrid Grid.Column="0"
+                      ItemsSource="{Binding Items}"
+                      SelectedItem="{Binding SelectedItem}"
+                      Style="{StaticResource ListGridStyle}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
+                    <DataGridTextColumn Header="Account reference" Binding="{Binding AccountReference}" />
+                    <DataGridTextColumn Header="Notes" Binding="{Binding Notes}" Width="2*" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Border Grid.Column="1"
+                    Style="{StaticResource EditorPanelStyle}"
+                    DataContext="{Binding Editor}"
+                    Visibility="{Binding Converter={StaticResource NullToVisibility}}">
+                <StackPanel>
+                    <TextBlock Text="{Binding Title}" Style="{StaticResource SectionTitleStyle}" />
+                    <TextBlock Text="Name" Style="{StaticResource FieldLabelStyle}" />
+                    <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource EditorTextBoxStyle}" />
+                    <TextBlock Text="Account reference" Style="{StaticResource FieldLabelStyle}" />
+                    <TextBox Text="{Binding AccountReference, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource EditorTextBoxStyle}" />
+                    <TextBlock Text="Notes" Style="{StaticResource FieldLabelStyle}" />
+                    <TextBox Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60" Style="{StaticResource EditorTextBoxStyle}" />
+                    <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorTextStyle}"
+                               Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibility}}" />
+                    <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                        <Button Content="Save" Command="{Binding DataContext.SaveCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource AccentToolbarButtonStyle}" />
+                        <Button Content="Cancel" Command="{Binding DataContext.CancelCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource ToolbarButtonStyle}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
+</UserControl>
