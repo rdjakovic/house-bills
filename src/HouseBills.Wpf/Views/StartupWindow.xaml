@@ -1,0 +1,27 @@
+<Window x:Class="HouseBills.Wpf.Views.StartupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="HouseBills"
+        Icon="/Assets/HouseBills.ico"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterScreen"
+        BorderThickness="1"
+        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}">
+    <StackPanel Width="360" Margin="32,28">
+        <!-- Grid (not a horizontal StackPanel) so the text column has a finite width and can wrap. -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="0" Source="/Assets/HouseBills.ico" Width="48" Height="48" VerticalAlignment="Top" />
+            <StackPanel Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Center">
+                <TextBlock Text="Starting HouseBills…" Style="{StaticResource SectionTitleStyle}" Margin="0" />
+                <TextBlock Text="Preparing your data. The first start can take a moment." Opacity="0.8" TextWrapping="Wrap" />
+            </StackPanel>
+        </Grid>
+        <ProgressBar IsIndeterminate="True" Height="4" Margin="0,24,0,0" />
+    </StackPanel>
+</Window>

@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Threading;
 
@@ -17,6 +16,9 @@ namespace HouseBills.Wpf;
 public partial class App : System.Windows.Application
 {
     private const string UnexpectedErrorMessage = "Something went wrong. The error has been logged; please try again.";
+
+    /// <summary>Quick starts finish before this, so the startup window doesn't flash.</summary>
+    private static readonly TimeSpan StartupWindowDelay = TimeSpan.FromMilliseconds(700);
 
     private IHost? _host;
 
@@ -47,11 +49,15 @@ public partial class App : System.Windows.Application
             return;
         }
 
-        await InitializeDatabaseAsync(_host.Services);
+        var startupWindow = await InitializeDatabaseAsync(_host.Services);
 
         var window = _host.Services.GetRequiredService<MainWindow>();
         MainWindow = window;
         window.Show();
+
+        // Close only after the main window is shown: WPF makes the first window shown the MainWindow, and closing
+        // the MainWindow would end the application (ShutdownMode=OnMainWindowClose).
+        startupWindow?.Close();
     }
 
     protected override void OnExit(ExitEventArgs e)
@@ -61,29 +67,39 @@ public partial class App : System.Windows.Application
     }
 
     /// <summary>
-    /// Creates/upgrades a private LocalDB database before the first page loads. On failure the window still opens
-    /// (pages then report the problem) so the user isn't left with nothing.
+    /// Creates/upgrades a private LocalDB database before the first page loads. If that takes longer than
+    /// <see cref="StartupWindowDelay"/>, a "Starting HouseBills…" window is shown and returned so the caller closes it
+    /// once the main window is up. On failure the main window still opens (pages then report the problem).
     /// </summary>
-    private async Task InitializeDatabaseAsync(IServiceProvider services)
+    private async Task<StartupWindow?> InitializeDatabaseAsync(IServiceProvider services)
     {
-        Mouse.OverrideCursor = Cursors.Wait;
+        // Off the UI thread: parts of it are synchronous (LocalDB instance start, EF model building) and would
+        // otherwise keep the startup window from rendering.
+        var initializer = services.GetRequiredService<IDatabaseInitializer>();
+        var initialization = Task.Run(() => initializer.InitializeAsync(CancellationToken.None));
+        StartupWindow? startupWindow = null;
         try
         {
-            await services.GetRequiredService<IDatabaseInitializer>().InitializeAsync(CancellationToken.None);
+            if (await Task.WhenAny(initialization, Task.Delay(StartupWindowDelay)) != initialization)
+            {
+                startupWindow = services.GetRequiredService<StartupWindow>();
+                startupWindow.Show();
+            }
+
+            await initialization;
         }
         catch (Exception ex)
         {
             Logger?.LogError(ex, "Database initialization failed.");
+            startupWindow?.Hide();
             MessageBox.Show(
                 "HouseBills could not prepare its database. The error has been logged; please try restarting the application.",
                 "HouseBills",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
         }
-        finally
-        {
-            Mouse.OverrideCursor = null;
-        }
+
+        return startupWindow;
     }
 
     private void RegisterGlobalExceptionHandlers()

@@ -4,7 +4,13 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <!-- Regenerate with tools\generate-icon.ps1. -->
+    <ApplicationIcon>Assets\HouseBills.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\HouseBills.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HouseBills.Application\HouseBills.Application.csproj" />

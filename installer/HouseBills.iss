@@ -36,6 +36,7 @@ Compression=lzma2/max
 SolidCompression=yes
 OutputBaseFilename=HouseBills-Setup-{#AppVersion}
 UninstallDisplayIcon={app}\{#AppExe}
+SetupIconFile=..\src\HouseBills.Wpf\Assets\HouseBills.ico
 UninstallDisplayName=HouseBills
 ; Close a running HouseBills before upgrading its files.
 CloseApplications=yes

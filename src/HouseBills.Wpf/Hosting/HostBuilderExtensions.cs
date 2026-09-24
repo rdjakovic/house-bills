@@ -46,6 +46,7 @@ internal static class HostBuilderExtensions
         services.AddSingleton<ReportsViewModel>();
 
         services.AddSingleton<MainWindow>();
+        services.AddTransient<StartupWindow>();
         return services;
     }
 }
