@@ -7,6 +7,8 @@ using HouseBills.Application.Categories;
 using HouseBills.Application.Common;
 using HouseBills.Application.Payees;
 using HouseBills.Application.RecurringBills;
+using HouseBills.Presentation.Resources;
+using HouseBills.Wpf.Localization;
 using HouseBills.Wpf.Services;
 using HouseBills.Wpf.ViewModels.RecurringBills;
 
@@ -36,7 +38,7 @@ public sealed partial class RecurringBillsViewModel : PageViewModel
         _clock = clock;
     }
 
-    public override string Title => "Recurring bills";
+    public override string Title => Strings.Page_RecurringBills;
 
     public ObservableCollection<RecurringBillDto> Items { get; } = [];
 
@@ -60,7 +62,7 @@ public sealed partial class RecurringBillsViewModel : PageViewModel
                 CategoryLookup = await _categories.ListAsync(CancellationToken.None);
                 await LoadAsync(CancellationToken.None);
             },
-            "Could not load recurring bills.");
+            Strings.Recurring_LoadFailed);
     }
 
     [RelayCommand]
@@ -102,20 +104,20 @@ public sealed partial class RecurringBillsViewModel : PageViewModel
         return ExecuteAndReloadAsync(
             () => _recurringBills.SetActiveAsync(item.Id, !item.IsActive, item.RowVersion, cancellationToken),
             () => LoadAsync(cancellationToken),
-            "Could not update the recurring bill.");
+            Strings.Recurring_UpdateFailed);
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private async Task DeleteAsync(CancellationToken cancellationToken)
     {
         if (SelectedItem is not { } item
-            || !Dialogs.Confirm("Delete recurring bill", $"Delete '{item.Name}'? Bills already generated from it are kept."))
+            || !Dialogs.Confirm(Strings.Recurring_DeleteTitle, string.Format(LocalizedStrings.FormattingCulture, Strings.Recurring_DeleteConfirm, item.Name)))
         {
             return;
         }
 
         Editor = null;
-        await ExecuteAndReloadAsync(() => _recurringBills.DeleteAsync(item.Id, item.RowVersion, cancellationToken), () => LoadAsync(cancellationToken), "Could not delete the recurring bill.");
+        await ExecuteAndReloadAsync(() => _recurringBills.DeleteAsync(item.Id, item.RowVersion, cancellationToken), () => LoadAsync(cancellationToken), Strings.Recurring_DeleteFailed);
     }
 
     private bool HasSelection() => SelectedItem is not null;

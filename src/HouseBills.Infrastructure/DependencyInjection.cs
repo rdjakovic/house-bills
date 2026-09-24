@@ -1,8 +1,10 @@
 using HouseBills.Application.Common;
 using HouseBills.Application.Persistence;
+using HouseBills.Application.Preferences;
 using HouseBills.Application.Reports;
 using HouseBills.Infrastructure.Persistence;
 using HouseBills.Infrastructure.Persistence.Repositories;
+using HouseBills.Infrastructure.Preferences;
 using HouseBills.Infrastructure.Reports;
 
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +33,9 @@ public static class DependencyInjection
         services.AddSingleton<IBillRepository, BillRepository>();
         services.AddSingleton<IReportQueries, ReportQueries>();
         services.AddSingleton<IDatabaseInitializer, LocalDbInitializer>();
+
+        services.AddOptions<UserPreferencesOptions>();
+        services.AddSingleton<IUserPreferencesStore, JsonUserPreferencesStore>();
 
         return services;
     }

@@ -1,5 +1,6 @@
 using HouseBills.Application.Common;
 using HouseBills.Application.Persistence;
+using HouseBills.Application.Resources;
 using HouseBills.Domain;
 
 namespace HouseBills.Application.Payees;
@@ -14,9 +15,9 @@ internal sealed class PayeeService(IPayeeRepository repository) : IPayeeService
     public async Task<Result<int>> SaveAsync(SavePayeeRequest request, CancellationToken cancellationToken)
     {
         var errors = new List<string>();
-        FieldValidation.Text(errors, request.Name, Payee.NameMaxLength, "Name", required: true);
-        FieldValidation.Text(errors, request.AccountReference, Payee.AccountReferenceMaxLength, "Account reference", required: false);
-        FieldValidation.Text(errors, request.Notes, Payee.NotesMaxLength, "Notes", required: false);
+        FieldValidation.Text(errors, request.Name, Payee.NameMaxLength, Messages.Field_Name, required: true);
+        FieldValidation.Text(errors, request.AccountReference, Payee.AccountReferenceMaxLength, Messages.Field_AccountReference, required: false);
+        FieldValidation.Text(errors, request.Notes, Payee.NotesMaxLength, Messages.Field_Notes, required: false);
         if (FieldValidation.ToError(errors) is { } validationError)
         {
             return validationError;
@@ -25,7 +26,7 @@ internal sealed class PayeeService(IPayeeRepository repository) : IPayeeService
         var name = request.Name.Trim();
         if (await repository.NameExistsAsync(name, request.Id, cancellationToken))
         {
-            return Error.Validation($"A payee named '{name}' already exists.");
+            return Error.Validation(FieldValidation.Format(Messages.Payee_NameExists, name));
         }
 
         if (request.Id is not { } id)
@@ -38,7 +39,7 @@ internal sealed class PayeeService(IPayeeRepository repository) : IPayeeService
         var existing = await repository.GetAsync(id, cancellationToken);
         if (existing is null)
         {
-            return Error.NotFound("The payee no longer exists.");
+            return Error.NotFound(Messages.Payee_NotFound);
         }
 
         existing.Update(name, request.AccountReference, request.Notes);
@@ -50,7 +51,7 @@ internal sealed class PayeeService(IPayeeRepository repository) : IPayeeService
     {
         if (await repository.IsInUseAsync(id, cancellationToken))
         {
-            return Error.Validation("This payee is used by bills or recurring bills and cannot be deleted.");
+            return Error.Validation(Messages.Payee_InUse);
         }
 
         return await repository.TryDeleteAsync(id, rowVersion, cancellationToken);

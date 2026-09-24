@@ -8,6 +8,8 @@ using HouseBills.Application.Categories;
 using HouseBills.Application.Common;
 using HouseBills.Application.Payees;
 using HouseBills.Application.RecurringBills;
+using HouseBills.Presentation.Resources;
+using HouseBills.Wpf.Localization;
 using HouseBills.Wpf.Services;
 using HouseBills.Wpf.ViewModels.Bills;
 
@@ -42,7 +44,7 @@ public sealed partial class BillsViewModel : PageViewModel
         StatusFilter = BillStatusFilter.Unpaid;
     }
 
-    public override string Title => "Bills";
+    public override string Title => Strings.Page_Bills;
 
     public ObservableCollection<BillListItem> Bills { get; } = [];
 
@@ -99,13 +101,13 @@ public sealed partial class BillsViewModel : PageViewModel
                 await LoadLookupsAsync(CancellationToken.None);
                 await LoadBillsAsync(CancellationToken.None);
             },
-            "Could not load bills.");
+            Strings.Bills_LoadFailed);
     }
 
     [RelayCommand]
     private Task RefreshAsync(CancellationToken cancellationToken)
     {
-        return RunAsync(() => LoadBillsAsync(cancellationToken), "Could not load bills.");
+        return RunAsync(() => LoadBillsAsync(cancellationToken), Strings.Bills_LoadFailed);
     }
 
     [RelayCommand]
@@ -129,11 +131,11 @@ public sealed partial class BillsViewModel : PageViewModel
                 created = await _recurringBills.GenerateUpcomingBillsAsync(cancellationToken);
                 await LoadBillsAsync(cancellationToken);
             },
-            "Could not generate bills.");
+            Strings.Bills_GenerateFailed);
 
         if (succeeded)
         {
-            Dialogs.ShowInfo(created == 0 ? "No new bills were due to be generated." : $"Generated {created} bill(s) from recurring bills.");
+            Dialogs.ShowInfo(created == 0 ? Strings.Bills_NoneGenerated : string.Format(LocalizedStrings.FormattingCulture, Strings.Bills_Generated, created));
         }
     }
 
@@ -175,13 +177,13 @@ public sealed partial class BillsViewModel : PageViewModel
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private async Task DeleteAsync(CancellationToken cancellationToken)
     {
-        if (SelectedBill is not { } bill || !Dialogs.Confirm("Delete bill", $"Delete '{bill.Description}' due {bill.DueDate:d}?"))
+        if (SelectedBill is not { } bill || !Dialogs.Confirm(Strings.Bills_DeleteTitle, string.Format(LocalizedStrings.FormattingCulture, Strings.Bills_DeleteConfirm, bill.Description, bill.DueDate)))
         {
             return;
         }
 
         Cancel();
-        await ExecuteAndReloadAsync(() => _bills.DeleteAsync(bill.Id, bill.RowVersion, cancellationToken), () => LoadBillsAsync(cancellationToken), "Could not delete the bill.");
+        await ExecuteAndReloadAsync(() => _bills.DeleteAsync(bill.Id, bill.RowVersion, cancellationToken), () => LoadBillsAsync(cancellationToken), Strings.Bills_DeleteFailed);
     }
 
     [RelayCommand(CanExecute = nameof(IsUnpaidSelected))]
@@ -209,7 +211,7 @@ public sealed partial class BillsViewModel : PageViewModel
     private Task MarkUnpaidAsync(CancellationToken cancellationToken)
     {
         var bill = SelectedBill!;
-        return ExecuteAndReloadAsync(() => _bills.MarkUnpaidAsync(bill.Id, bill.RowVersion, cancellationToken), () => LoadBillsAsync(cancellationToken), "Could not update the bill.");
+        return ExecuteAndReloadAsync(() => _bills.MarkUnpaidAsync(bill.Id, bill.RowVersion, cancellationToken), () => LoadBillsAsync(cancellationToken), Strings.Bills_UpdateFailed);
     }
 
     private bool HasSelection() => SelectedBill is not null;

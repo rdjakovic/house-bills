@@ -3,6 +3,7 @@
     <Project Path="src/HouseBills.Application/HouseBills.Application.csproj" />
     <Project Path="src/HouseBills.Domain/HouseBills.Domain.csproj" />
     <Project Path="src/HouseBills.Infrastructure/HouseBills.Infrastructure.csproj" />
+    <Project Path="src/HouseBills.Presentation.Resources/HouseBills.Presentation.Resources.csproj" />
     <Project Path="src/HouseBills.Wpf/HouseBills.Wpf.csproj" />
   </Folder>
   <Folder Name="/tests/">

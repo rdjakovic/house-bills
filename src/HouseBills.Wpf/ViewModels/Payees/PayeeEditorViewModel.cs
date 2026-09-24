@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 using HouseBills.Application.Payees;
 using HouseBills.Domain;
+using HouseBills.Presentation.Resources;
 
 namespace HouseBills.Wpf.ViewModels.Payees;
 
@@ -23,22 +24,22 @@ public sealed partial class PayeeEditorViewModel : EditorViewModel
 
     public byte[]? RowVersion { get; }
 
-    public override string Title => Id is null ? "New payee" : "Edit payee";
+    public override string Title => Id is null ? Strings.Payees_EditorNewTitle : Strings.Payees_EditorEditTitle;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required(ErrorMessage = "Name is required.")]
-    [MaxLength(Payee.NameMaxLength)]
+    [Required(ErrorMessageResourceType = typeof(Strings), ErrorMessageResourceName = nameof(Strings.Validation_NameRequired))]
+    [MaxLength(Payee.NameMaxLength, ErrorMessageResourceType = typeof(Strings), ErrorMessageResourceName = nameof(Strings.Validation_MaxLength))]
     public partial string Name { get; set; }
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [MaxLength(Payee.AccountReferenceMaxLength)]
+    [MaxLength(Payee.AccountReferenceMaxLength, ErrorMessageResourceType = typeof(Strings), ErrorMessageResourceName = nameof(Strings.Validation_MaxLength))]
     public partial string? AccountReference { get; set; }
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [MaxLength(Payee.NotesMaxLength)]
+    [MaxLength(Payee.NotesMaxLength, ErrorMessageResourceType = typeof(Strings), ErrorMessageResourceName = nameof(Strings.Validation_MaxLength))]
     public partial string? Notes { get; set; }
 
     public SavePayeeRequest ToRequest() => new(Id, Name, AccountReference, Notes, RowVersion);

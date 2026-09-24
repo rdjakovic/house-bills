@@ -5,6 +5,8 @@
     <conv:DateOnlyToDateTimeConverter x:Key="DateOnlyToDateTime" />
     <conv:NullToVisibilityConverter x:Key="NullToVisibility" />
     <conv:BillStatusToBrushConverter x:Key="BillStatusToBrush" />
+    <conv:EnumToLocalizedTextConverter x:Key="EnumText" />
+    <conv:MoneyConverter x:Key="Money" />
     <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
 
     <SolidColorBrush x:Key="StatusPaidBrush" Color="#2E7D32" />

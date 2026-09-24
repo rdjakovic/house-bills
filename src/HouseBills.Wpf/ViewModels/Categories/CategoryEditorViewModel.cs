@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 using HouseBills.Application.Categories;
 using HouseBills.Domain;
+using HouseBills.Presentation.Resources;
 
 namespace HouseBills.Wpf.ViewModels.Categories;
 
@@ -21,12 +22,12 @@ public sealed partial class CategoryEditorViewModel : EditorViewModel
 
     public byte[]? RowVersion { get; }
 
-    public override string Title => Id is null ? "New category" : "Edit category";
+    public override string Title => Id is null ? Strings.Categories_EditorNewTitle : Strings.Categories_EditorEditTitle;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required(ErrorMessage = "Name is required.")]
-    [MaxLength(Category.NameMaxLength)]
+    [Required(ErrorMessageResourceType = typeof(Strings), ErrorMessageResourceName = nameof(Strings.Validation_NameRequired))]
+    [MaxLength(Category.NameMaxLength, ErrorMessageResourceType = typeof(Strings), ErrorMessageResourceName = nameof(Strings.Validation_MaxLength))]
     public partial string Name { get; set; }
 
     public SaveCategoryRequest ToRequest() => new(Id, Name, RowVersion);

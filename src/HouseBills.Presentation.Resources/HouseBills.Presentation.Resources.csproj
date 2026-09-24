@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- UI texts shared by the presentation layer (English + Strings.sr-Latn.resx). No UI-framework dependency, so a
+       future UI (WinUI, Avalonia...) can reuse it. A separate project because WPF's XAML pre-compilation (*_wpftmp)
+       can't see resource classes generated inside the WPF project itself. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <!-- Public so DataAnnotations attributes can use it as ErrorMessageResourceType. -->
+  <ItemGroup>
+    <EmbeddedResource Update="Strings.resx">
+      <StronglyTypedFileName>$(IntermediateOutputPath)Strings.g.cs</StronglyTypedFileName>
+      <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+      <StronglyTypedNamespace>HouseBills.Presentation.Resources</StronglyTypedNamespace>
+      <StronglyTypedClassName>Strings</StronglyTypedClassName>
+      <PublicClass>true</PublicClass>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

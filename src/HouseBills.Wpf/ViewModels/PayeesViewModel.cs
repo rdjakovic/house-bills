@@ -4,6 +4,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using HouseBills.Application.Payees;
+using HouseBills.Presentation.Resources;
+using HouseBills.Wpf.Localization;
 using HouseBills.Wpf.Services;
 using HouseBills.Wpf.ViewModels.Payees;
 
@@ -14,7 +16,7 @@ namespace HouseBills.Wpf.ViewModels;
 public sealed partial class PayeesViewModel(IPayeeService payees, IDialogService dialogs, ILogger<PayeesViewModel> logger)
     : PageViewModel(dialogs, logger)
 {
-    public override string Title => "Payees";
+    public override string Title => Strings.Page_Payees;
 
     public ObservableCollection<PayeeDto> Items { get; } = [];
 
@@ -27,7 +29,7 @@ public sealed partial class PayeesViewModel(IPayeeService payees, IDialogService
 
     public override Task OnNavigatedToAsync()
     {
-        return RunAsync(() => LoadAsync(CancellationToken.None), "Could not load payees.");
+        return RunAsync(() => LoadAsync(CancellationToken.None), Strings.Payees_LoadFailed);
     }
 
     [RelayCommand]
@@ -65,13 +67,13 @@ public sealed partial class PayeesViewModel(IPayeeService payees, IDialogService
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private async Task DeleteAsync(CancellationToken cancellationToken)
     {
-        if (SelectedItem is not { } item || !Dialogs.Confirm("Delete payee", $"Delete '{item.Name}'?"))
+        if (SelectedItem is not { } item || !Dialogs.Confirm(Strings.Payees_DeleteTitle, string.Format(LocalizedStrings.FormattingCulture, Strings.Common_DeleteConfirm, item.Name)))
         {
             return;
         }
 
         Editor = null;
-        await ExecuteAndReloadAsync(() => payees.DeleteAsync(item.Id, item.RowVersion, cancellationToken), () => LoadAsync(cancellationToken), "Could not delete the payee.");
+        await ExecuteAndReloadAsync(() => payees.DeleteAsync(item.Id, item.RowVersion, cancellationToken), () => LoadAsync(cancellationToken), Strings.Payees_DeleteFailed);
     }
 
     private bool HasSelection() => SelectedItem is not null;

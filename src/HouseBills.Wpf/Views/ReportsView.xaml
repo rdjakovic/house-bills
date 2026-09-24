@@ -1,6 +1,7 @@
 <UserControl x:Class="HouseBills.Wpf.Views.ReportsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="clr-namespace:HouseBills.Wpf.Localization"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:HouseBills.Wpf.ViewModels"
@@ -12,27 +13,27 @@
         <TextBlock DockPanel.Dock="Top" Text="{Binding Title}" Style="{StaticResource PageTitleStyle}" />
 
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,12">
-            <TextBlock Text="Year" VerticalAlignment="Center" Margin="0,0,8,0" />
+            <TextBlock Text="{loc:Tr Reports_Year}" VerticalAlignment="Center" Margin="0,0,8,0" />
             <ComboBox ItemsSource="{Binding Years}" SelectedItem="{Binding SelectedYear}" MinWidth="100" Margin="0,0,8,0" />
-            <Button Content="Show" Command="{Binding RefreshCommand}" Style="{StaticResource ToolbarButtonStyle}" />
+            <Button Content="{loc:Tr Common_Show}" Command="{Binding RefreshCommand}" Style="{StaticResource ToolbarButtonStyle}" />
         </StackPanel>
 
         <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,12">
             <StackPanel Margin="0,0,32,0">
-                <TextBlock Text="Total due" Opacity="0.8" />
-                <TextBlock Text="{Binding YearTotal, StringFormat=C}" FontSize="20" FontWeight="SemiBold" />
+                <TextBlock Text="{loc:Tr Reports_TotalDue}" Opacity="0.8" />
+                <TextBlock Text="{Binding YearTotal, Converter={StaticResource Money}}" FontSize="20" FontWeight="SemiBold" />
             </StackPanel>
             <StackPanel Margin="0,0,32,0">
-                <TextBlock Text="Paid" Opacity="0.8" />
-                <TextBlock Text="{Binding YearPaid, StringFormat=C}" FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource StatusPaidBrush}" />
+                <TextBlock Text="{loc:Tr Reports_Paid}" Opacity="0.8" />
+                <TextBlock Text="{Binding YearPaid, Converter={StaticResource Money}}" FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource StatusPaidBrush}" />
             </StackPanel>
             <StackPanel Margin="0,0,32,0">
-                <TextBlock Text="Outstanding" Opacity="0.8" />
-                <TextBlock Text="{Binding YearOutstanding, StringFormat=C}" FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource StatusOverdueBrush}" />
+                <TextBlock Text="{loc:Tr Reports_Outstanding}" Opacity="0.8" />
+                <TextBlock Text="{Binding YearOutstanding, Converter={StaticResource Money}}" FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource StatusOverdueBrush}" />
             </StackPanel>
             <StackPanel>
-                <TextBlock Text="Previous year" Opacity="0.8" />
-                <TextBlock Text="{Binding PreviousYearTotal, StringFormat=C}" FontSize="20" FontWeight="SemiBold" />
+                <TextBlock Text="{loc:Tr Reports_PreviousYear}" Opacity="0.8" />
+                <TextBlock Text="{Binding PreviousYearTotal, Converter={StaticResource Money}}" FontSize="20" FontWeight="SemiBold" />
             </StackPanel>
         </WrapPanel>
 
@@ -43,10 +44,10 @@
             </Grid.ColumnDefinitions>
 
             <DockPanel Grid.Column="0" Margin="0,0,16,0">
-                <TextBlock DockPanel.Dock="Top" Text="By month" Style="{StaticResource SectionTitleStyle}" />
+                <TextBlock DockPanel.Dock="Top" Text="{loc:Tr Reports_ByMonth}" Style="{StaticResource SectionTitleStyle}" />
                 <DataGrid ItemsSource="{Binding Months}" Style="{StaticResource ListGridStyle}" CanUserSortColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Month" Binding="{Binding MonthName}" />
+                        <DataGridTextColumn Header="{loc:Tr Column_Month}" Binding="{Binding MonthName}" />
                         <DataGridTemplateColumn Header="" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -54,24 +55,24 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="Bills" Binding="{Binding Row.BillCount}" />
-                        <DataGridTextColumn Header="Total" Binding="{Binding Row.TotalAmount, StringFormat=C}" />
-                        <DataGridTextColumn Header="Paid" Binding="{Binding Row.PaidAmount, StringFormat=C}" />
-                        <DataGridTextColumn Header="Outstanding" Binding="{Binding Row.OutstandingAmount, StringFormat=C}" />
-                        <DataGridTextColumn Header="Previous year" Binding="{Binding Row.PreviousYearTotalAmount, StringFormat=C}" />
-                        <DataGridTextColumn Header="Change" Binding="{Binding ChangeFromPreviousYear, StringFormat=C}" />
+                        <DataGridTextColumn Header="{loc:Tr Column_BillCount}" Binding="{Binding Row.BillCount}" />
+                        <DataGridTextColumn Header="{loc:Tr Column_Total}" Binding="{Binding Row.TotalAmount, Converter={StaticResource Money}}" />
+                        <DataGridTextColumn Header="{loc:Tr Column_Paid}" Binding="{Binding Row.PaidAmount, Converter={StaticResource Money}}" />
+                        <DataGridTextColumn Header="{loc:Tr Column_Outstanding}" Binding="{Binding Row.OutstandingAmount, Converter={StaticResource Money}}" />
+                        <DataGridTextColumn Header="{loc:Tr Column_PreviousYear}" Binding="{Binding Row.PreviousYearTotalAmount, Converter={StaticResource Money}}" />
+                        <DataGridTextColumn Header="{loc:Tr Column_Change}" Binding="{Binding ChangeFromPreviousYear, Converter={StaticResource Money}}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>
 
             <DockPanel Grid.Column="1">
-                <TextBlock DockPanel.Dock="Top" Text="By category" Style="{StaticResource SectionTitleStyle}" />
+                <TextBlock DockPanel.Dock="Top" Text="{loc:Tr Reports_ByCategory}" Style="{StaticResource SectionTitleStyle}" />
                 <DataGrid ItemsSource="{Binding CategoryTotals}" Style="{StaticResource ListGridStyle}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" Width="*" />
-                        <DataGridTextColumn Header="Bills" Binding="{Binding BillCount}" />
-                        <DataGridTextColumn Header="Total" Binding="{Binding TotalAmount, StringFormat=C}" SortMemberPath="TotalAmount" />
-                        <DataGridTextColumn Header="Paid" Binding="{Binding PaidAmount, StringFormat=C}" SortMemberPath="PaidAmount" />
+                        <DataGridTextColumn Header="{loc:Tr Field_Category}" Binding="{Binding CategoryName}" Width="*" />
+                        <DataGridTextColumn Header="{loc:Tr Column_BillCount}" Binding="{Binding BillCount}" />
+                        <DataGridTextColumn Header="{loc:Tr Column_Total}" Binding="{Binding TotalAmount, Converter={StaticResource Money}}" SortMemberPath="TotalAmount" />
+                        <DataGridTextColumn Header="{loc:Tr Column_Paid}" Binding="{Binding PaidAmount, Converter={StaticResource Money}}" SortMemberPath="PaidAmount" />
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>

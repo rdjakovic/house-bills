@@ -21,11 +21,30 @@
 
         <DockPanel Grid.Column="0" Margin="8,16,8,16">
             <TextBlock DockPanel.Dock="Top" Text="HouseBills" FontSize="20" FontWeight="SemiBold" Margin="12,0,0,16" />
+            <!-- One list (so selection works as usual); footer items such as Settings dock to the bottom edge.
+                 Vertical scrolling is disabled so the panel gets the full height to dock against. -->
             <ListBox ItemsSource="{Binding Items}"
                      SelectedItem="{Binding SelectedItem}"
                      DisplayMemberPath="Title"
                      BorderThickness="0"
-                     Background="Transparent" />
+                     Background="Transparent"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <DockPanel LastChildFill="False" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="DockPanel.Dock" Value="Top" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsFooter}" Value="True">
+                                <Setter Property="DockPanel.Dock" Value="Bottom" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
         </DockPanel>
 
         <Grid Grid.Column="1">

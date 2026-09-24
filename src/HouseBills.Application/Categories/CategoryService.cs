@@ -1,5 +1,6 @@
 using HouseBills.Application.Common;
 using HouseBills.Application.Persistence;
+using HouseBills.Application.Resources;
 using HouseBills.Domain;
 
 namespace HouseBills.Application.Categories;
@@ -14,7 +15,7 @@ internal sealed class CategoryService(ICategoryRepository repository) : ICategor
     public async Task<Result<int>> SaveAsync(SaveCategoryRequest request, CancellationToken cancellationToken)
     {
         var errors = new List<string>();
-        FieldValidation.Text(errors, request.Name, Category.NameMaxLength, "Name", required: true);
+        FieldValidation.Text(errors, request.Name, Category.NameMaxLength, Messages.Field_Name, required: true);
         if (FieldValidation.ToError(errors) is { } validationError)
         {
             return validationError;
@@ -23,7 +24,7 @@ internal sealed class CategoryService(ICategoryRepository repository) : ICategor
         var name = request.Name.Trim();
         if (await repository.NameExistsAsync(name, request.Id, cancellationToken))
         {
-            return Error.Validation($"A category named '{name}' already exists.");
+            return Error.Validation(FieldValidation.Format(Messages.Category_NameExists, name));
         }
 
         if (request.Id is not { } id)
@@ -36,7 +37,7 @@ internal sealed class CategoryService(ICategoryRepository repository) : ICategor
         var existing = await repository.GetAsync(id, cancellationToken);
         if (existing is null)
         {
-            return Error.NotFound("The category no longer exists.");
+            return Error.NotFound(Messages.Category_NotFound);
         }
 
         existing.Rename(name);
@@ -48,7 +49,7 @@ internal sealed class CategoryService(ICategoryRepository repository) : ICategor
     {
         if (await repository.IsInUseAsync(id, cancellationToken))
         {
-            return Error.Validation("This category is used by bills or recurring bills and cannot be deleted.");
+            return Error.Validation(Messages.Category_InUse);
         }
 
         return await repository.TryDeleteAsync(id, rowVersion, cancellationToken);

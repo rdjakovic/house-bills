@@ -12,6 +12,7 @@ Built with .NET 10, WPF (Fluent theme) and SQL Server LocalDB. Everything stays 
 - **Recurring bills** — templates that repeat weekly, monthly, quarterly or yearly, with an optional end date. Bills are generated automatically for the next 31 days when the app starts (and on demand). Pausing and resuming a template doesn't back-fill the paused period; deleting a generated bill doesn't bring it back.
 - **Payees and categories** — names are unique; anything still in use can't be deleted. Seven starter categories are created with the database.
 - **Reports** — monthly totals for a year compared with the previous year, and totals per category.
+- **English or Srpski** — choose the language under **Settings** (bottom of the menu); it switches immediately and is remembered. Serbian also uses Serbian formats (`1.234,56 RSD`, `24.9.2026.`); English follows your Windows regional settings.
 - **Safe for more than one person editing** — if someone else changed a record in the meantime, you get a "reload and try again" message instead of silently overwriting their change.
 
 ---
@@ -34,6 +35,7 @@ On a PC without LocalDB, installation can take several minutes. No separate .NET
 - Each Windows user on the PC has their own HouseBills data (LocalDB is per user). It lives in your user profile (`C:\Users\<you>\HouseBills.mdf`).
 - Uninstalling HouseBills keeps your data and LocalDB, so reinstalling brings your bills back.
 - Log files are in `%LOCALAPPDATA%\HouseBills\Logs` (one file per day, kept for 30 days) — useful when something goes wrong.
+- Your language choice is stored in `%LOCALAPPDATA%\HouseBills\preferences.json`. Without it, HouseBills starts in Serbian if Windows' display language is Serbian, otherwise in English.
 
 ---
 
@@ -77,6 +79,7 @@ dotnet test
 - Tests use **xUnit v3** on **Microsoft.Testing.Platform** (enabled in `global.json`), with Shouldly and NSubstitute.
 - `HouseBills.Infrastructure.Tests` runs SQL Server in Docker via Testcontainers — **Docker Desktop must be running**, otherwise those tests fail with "Docker is either not running". The first run downloads the SQL Server image (~several minutes).
 - LocalDB tests (database creation and re-attach) skip themselves when LocalDB isn't installed.
+- Tests run with the `en-US` culture (`tests/xunit.runner.json`), so assertions on English texts don't depend on the Windows display language.
 - Run one project: `dotnet test --project tests/HouseBills.Domain.Tests`
 
 ### Before you commit
@@ -119,6 +122,7 @@ Test installer changes on a **clean** Windows (e.g. Windows Sandbox), not only o
 | `Billing:GenerationLookaheadDays` | `31` | How far ahead recurring bills are generated (0–366). |
 | `FileLogging:Directory` | `%LOCALAPPDATA%\HouseBills\Logs` | Log folder; environment variables are expanded. |
 | `FileLogging:RetainedDays` | `30` | Log files older than this are deleted (1–3650). |
+| `UserPreferences:FilePath` | `%LOCALAPPDATA%\HouseBills\preferences.json` | Where the language choice is saved (not in `appsettings.json` by default; handy to override in tests). |
 | `Logging:LogLevel` | `Information` | Standard .NET log levels; apply to the log file too. |
 
 Every setting can be overridden with an environment variable, using `__` for `:` (e.g. `Billing__GenerationLookaheadDays=60`).
@@ -130,13 +134,28 @@ src/
   HouseBills.Domain/          Entities and business rules (bills, recurring schedules, money rules). No dependencies.
   HouseBills.Application/     Services, validation, Result types, repository and report interfaces.
   HouseBills.Infrastructure/  EF Core DbContext, configurations, migrations, repositories, Dapper reports, LocalDB setup.
-  HouseBills.Wpf/             WPF views, view models (CommunityToolkit.Mvvm), navigation, dialogs, app host, logging.
+  HouseBills.Presentation.Resources/  UI texts (Strings.resx + Strings.sr-Latn.resx); no UI-framework dependency.
+  HouseBills.Wpf/             WPF views, view models (CommunityToolkit.Mvvm), navigation, dialogs, app host, logging, localization.
 tests/                        One test project per layer; Infrastructure tests use real SQL Server.
 installer/                    Inno Setup script and build script.
 tools/generate-icon.ps1       Regenerates src/HouseBills.Wpf/Assets/HouseBills.ico.
 ```
 
 Dependencies point inwards (Wpf → Application → Domain; Infrastructure implements Application interfaces and is referenced by the Wpf project only in its composition root, `Hosting/HostBuilderExtensions.cs`). ViewModels depend on Application interfaces only, so the database layer could later be swapped for an API client.
+
+### Texts and translations
+
+All user-facing text is in resource files, English plus a Serbian (Latin) translation next to it:
+
+| Texts | Files | Used as |
+|---|---|---|
+| UI (buttons, labels, dialogs, enum names) | `src/HouseBills.Presentation.Resources/Strings.resx` + `Strings.sr-Latn.resx` | XAML: `{loc:Tr Key}` (updates live when the language changes); C#: `Strings.Key` |
+| Validation and business errors | `src/HouseBills.Application/Resources/Messages.resx` + `Messages.sr-Latn.resx` | C#: `Messages.Key` |
+
+- Add every new key to **both** files. Tests fail if a translation is missing or empty, if `{0}` placeholders differ between the languages, or if XAML uses a key that doesn't exist.
+- The `Strings`/`Messages` classes are generated at build time (no Visual Studio designer files). The UI texts live in their own project because WPF's XAML pre-compilation can't see resource classes generated inside the WPF project.
+- Show amounts with `Converter={StaticResource Money}` (not `StringFormat=C`), so they use the chosen language's formats.
+- Don't rely on `CultureInfo.CurrentUICulture`/`CurrentCulture` for texts or formats in UI code; use `Strings`, `LocalizedStrings.Culture` and `LocalizedStrings.FormattingCulture` (the ambient cultures are async-local and don't reliably follow a language switch).
 
 ### Tech stack
 

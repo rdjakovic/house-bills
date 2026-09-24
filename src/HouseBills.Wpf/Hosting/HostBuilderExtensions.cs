@@ -1,6 +1,10 @@
+using CommunityToolkit.Mvvm.Messaging;
+
 using HouseBills.Application;
 using HouseBills.Application.RecurringBills;
 using HouseBills.Infrastructure;
+using HouseBills.Infrastructure.Preferences;
+using HouseBills.Wpf.Localization;
 using HouseBills.Wpf.Services;
 using HouseBills.Wpf.ViewModels;
 using HouseBills.Wpf.Views;
@@ -28,6 +32,7 @@ internal static class HostBuilderExtensions
 
         // Direct SQL Server mode. For API mode, swap this for an Api.Client registration.
         builder.Services.AddInfrastructure(builder.Configuration);
+        builder.Services.AddOptions<UserPreferencesOptions>().BindConfiguration("UserPreferences");
 
         builder.Services.AddPresentation();
         return builder.Build();
@@ -37,6 +42,8 @@ internal static class HostBuilderExtensions
     {
         services.AddSingleton<INavigationService, NavigationService>();
         services.AddSingleton<IDialogService, DialogService>();
+        services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
+        services.AddSingleton<ILocalizationService, LocalizationService>();
 
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<BillsViewModel>();
@@ -44,6 +51,7 @@ internal static class HostBuilderExtensions
         services.AddSingleton<PayeesViewModel>();
         services.AddSingleton<CategoriesViewModel>();
         services.AddSingleton<ReportsViewModel>();
+        services.AddSingleton<SettingsViewModel>();
 
         services.AddSingleton<MainWindow>();
         services.AddTransient<StartupWindow>();

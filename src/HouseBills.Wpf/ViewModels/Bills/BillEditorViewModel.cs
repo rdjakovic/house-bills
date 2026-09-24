@@ -6,6 +6,7 @@ using HouseBills.Application.Bills;
 using HouseBills.Application.Categories;
 using HouseBills.Application.Payees;
 using HouseBills.Domain;
+using HouseBills.Presentation.Resources;
 
 namespace HouseBills.Wpf.ViewModels.Bills;
 
@@ -34,38 +35,38 @@ public sealed partial class BillEditorViewModel : EditorViewModel
 
     public IReadOnlyList<CategoryDto> Categories { get; }
 
-    public override string Title => Id is null ? "New bill" : "Edit bill";
+    public override string Title => Id is null ? Strings.Bills_EditorNewTitle : Strings.Bills_EditorEditTitle;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required(ErrorMessage = "Description is required.")]
-    [MaxLength(Bill.DescriptionMaxLength)]
+    [Required(ErrorMessageResourceType = typeof(Strings), ErrorMessageResourceName = nameof(Strings.Validation_DescriptionRequired))]
+    [MaxLength(Bill.DescriptionMaxLength, ErrorMessageResourceType = typeof(Strings), ErrorMessageResourceName = nameof(Strings.Validation_MaxLength))]
     public partial string Description { get; set; }
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required(ErrorMessage = "Select a payee.")]
+    [Required(ErrorMessageResourceType = typeof(Strings), ErrorMessageResourceName = nameof(Strings.Validation_SelectPayee))]
     public partial int? PayeeId { get; set; }
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required(ErrorMessage = "Select a category.")]
+    [Required(ErrorMessageResourceType = typeof(Strings), ErrorMessageResourceName = nameof(Strings.Validation_SelectCategory))]
     public partial int? CategoryId { get; set; }
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required(ErrorMessage = "Amount is required.")]
-    [Range(typeof(decimal), "0.01", "9999999999999999.99", ParseLimitsInInvariantCulture = true, ErrorMessage = "Amount must be greater than zero.")]
+    [Required(ErrorMessageResourceType = typeof(Strings), ErrorMessageResourceName = nameof(Strings.Validation_AmountRequired))]
+    [Range(typeof(decimal), "0.01", "9999999999999999.99", ParseLimitsInInvariantCulture = true, ErrorMessageResourceType = typeof(Strings), ErrorMessageResourceName = nameof(Strings.Validation_AmountPositive))]
     public partial decimal? Amount { get; set; }
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required(ErrorMessage = "Due date is required.")]
+    [Required(ErrorMessageResourceType = typeof(Strings), ErrorMessageResourceName = nameof(Strings.Validation_DueDateRequired))]
     public partial DateOnly? DueDate { get; set; }
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [MaxLength(Bill.NotesMaxLength)]
+    [MaxLength(Bill.NotesMaxLength, ErrorMessageResourceType = typeof(Strings), ErrorMessageResourceName = nameof(Strings.Validation_MaxLength))]
     public partial string? Notes { get; set; }
 
     /// <summary>Builds the request; call only after <see cref="EditorViewModel.Validate"/> succeeded.</summary>

@@ -1,4 +1,5 @@
 using HouseBills.Application.Persistence;
+using HouseBills.Application.Resources;
 
 namespace HouseBills.Application.Bills;
 
@@ -15,12 +16,12 @@ internal static class BillReferenceValidation
     {
         if (payeeId <= 0 || !await payees.ExistsAsync(payeeId, cancellationToken))
         {
-            errors.Add("Select a payee.");
+            errors.Add(Messages.Validation_SelectPayee);
         }
 
         if (categoryId <= 0 || !await categories.ExistsAsync(categoryId, cancellationToken))
         {
-            errors.Add("Select a category.");
+            errors.Add(Messages.Validation_SelectCategory);
         }
     }
 }

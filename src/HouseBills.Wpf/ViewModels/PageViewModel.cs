@@ -1,6 +1,9 @@
+
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using HouseBills.Application.Common;
+using HouseBills.Presentation.Resources;
+using HouseBills.Wpf.Localization;
 using HouseBills.Wpf.Services;
 
 using Microsoft.Extensions.Logging;
@@ -40,7 +43,7 @@ public abstract partial class PageViewModel(IDialogService dialogs, ILogger logg
         catch (Exception ex)
         {
             logger.LogError(ex, "Operation failed: {Operation}", failureMessage);
-            Dialogs.ShowError($"{failureMessage} Check the connection to the database and try again.");
+            Dialogs.ShowError(string.Format(LocalizedStrings.FormattingCulture, Strings.Error_CheckDatabase, failureMessage));
             return false;
         }
         finally
@@ -71,7 +74,7 @@ public abstract partial class PageViewModel(IDialogService dialogs, ILogger logg
                     await reload();
                 }
             },
-            "Could not save changes.");
+            Strings.Error_SaveFailed);
 
         if (!completed || result is null)
         {

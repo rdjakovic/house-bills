@@ -1,6 +1,7 @@
 <UserControl x:Class="HouseBills.Wpf.Views.RecurringBillsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="clr-namespace:HouseBills.Wpf.Localization"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:HouseBills.Wpf.ViewModels"
@@ -12,10 +13,10 @@
         <TextBlock DockPanel.Dock="Top" Text="{Binding Title}" Style="{StaticResource PageTitleStyle}" />
 
         <StackPanel DockPanel.Dock="Top" Style="{StaticResource ToolbarStyle}">
-            <Button Content="New recurring bill" Command="{Binding NewCommand}" Style="{StaticResource AccentToolbarButtonStyle}" />
-            <Button Content="Edit" Command="{Binding EditCommand}" Style="{StaticResource ToolbarButtonStyle}" />
-            <Button Content="Pause / resume" Command="{Binding ToggleActiveCommand}" Style="{StaticResource ToolbarButtonStyle}" />
-            <Button Content="Delete" Command="{Binding DeleteCommand}" Style="{StaticResource ToolbarButtonStyle}" />
+            <Button Content="{loc:Tr Recurring_New}" Command="{Binding NewCommand}" Style="{StaticResource AccentToolbarButtonStyle}" />
+            <Button Content="{loc:Tr Common_Edit}" Command="{Binding EditCommand}" Style="{StaticResource ToolbarButtonStyle}" />
+            <Button Content="{loc:Tr Recurring_PauseResume}" Command="{Binding ToggleActiveCommand}" Style="{StaticResource ToolbarButtonStyle}" />
+            <Button Content="{loc:Tr Common_Delete}" Command="{Binding DeleteCommand}" Style="{StaticResource ToolbarButtonStyle}" />
         </StackPanel>
 
         <Grid>
@@ -29,14 +30,14 @@
                       SelectedItem="{Binding SelectedItem}"
                       Style="{StaticResource ListGridStyle}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
-                    <DataGridTextColumn Header="Payee" Binding="{Binding PayeeName}" />
-                    <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" />
-                    <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat=C}" SortMemberPath="Amount" />
-                    <DataGridTextColumn Header="Frequency" Binding="{Binding Frequency}" />
-                    <DataGridTextColumn Header="Next due" Binding="{Binding NextDueDate, StringFormat=d}" SortMemberPath="NextDueDate" />
-                    <DataGridTextColumn Header="Ends" Binding="{Binding EndDate, StringFormat=d}" SortMemberPath="EndDate" />
-                    <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}" />
+                    <DataGridTextColumn Header="{loc:Tr Field_Name}" Binding="{Binding Name}" Width="*" />
+                    <DataGridTextColumn Header="{loc:Tr Field_Payee}" Binding="{Binding PayeeName}" />
+                    <DataGridTextColumn Header="{loc:Tr Field_Category}" Binding="{Binding CategoryName}" />
+                    <DataGridTextColumn Header="{loc:Tr Field_Amount}" Binding="{Binding Amount, Converter={StaticResource Money}}" SortMemberPath="Amount" />
+                    <DataGridTextColumn Header="{loc:Tr Field_Frequency}" Binding="{Binding Frequency, Converter={StaticResource EnumText}}" />
+                    <DataGridTextColumn Header="{loc:Tr Column_NextDue}" Binding="{Binding NextDueDate, StringFormat=d}" SortMemberPath="NextDueDate" />
+                    <DataGridTextColumn Header="{loc:Tr Column_Ends}" Binding="{Binding EndDate, StringFormat=d}" SortMemberPath="EndDate" />
+                    <DataGridCheckBoxColumn Header="{loc:Tr Column_Active}" Binding="{Binding IsActive}" />
                 </DataGrid.Columns>
             </DataGrid>
 
@@ -47,28 +48,34 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <TextBlock Text="{Binding Title}" Style="{StaticResource SectionTitleStyle}" />
-                        <TextBlock Text="Name" Style="{StaticResource FieldLabelStyle}" />
+                        <TextBlock Text="{loc:Tr Field_Name}" Style="{StaticResource FieldLabelStyle}" />
                         <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource EditorTextBoxStyle}" />
-                        <TextBlock Text="Payee" Style="{StaticResource FieldLabelStyle}" />
+                        <TextBlock Text="{loc:Tr Field_Payee}" Style="{StaticResource FieldLabelStyle}" />
                         <ComboBox ItemsSource="{Binding Payees}" DisplayMemberPath="Name" SelectedValuePath="Id" SelectedValue="{Binding PayeeId}" Style="{StaticResource EditorComboBoxStyle}" />
-                        <TextBlock Text="Category" Style="{StaticResource FieldLabelStyle}" />
+                        <TextBlock Text="{loc:Tr Field_Category}" Style="{StaticResource FieldLabelStyle}" />
                         <ComboBox ItemsSource="{Binding Categories}" DisplayMemberPath="Name" SelectedValuePath="Id" SelectedValue="{Binding CategoryId}" Style="{StaticResource EditorComboBoxStyle}" />
-                        <TextBlock Text="Amount" Style="{StaticResource FieldLabelStyle}" />
+                        <TextBlock Text="{loc:Tr Field_Amount}" Style="{StaticResource FieldLabelStyle}" />
                         <TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}" Style="{StaticResource EditorTextBoxStyle}" />
-                        <TextBlock Text="Frequency" Style="{StaticResource FieldLabelStyle}" />
-                        <ComboBox ItemsSource="{Binding Frequencies}" SelectedItem="{Binding Frequency}" Style="{StaticResource EditorComboBoxStyle}" />
-                        <TextBlock Text="First due date" Style="{StaticResource FieldLabelStyle}" />
+                        <TextBlock Text="{loc:Tr Field_Frequency}" Style="{StaticResource FieldLabelStyle}" />
+                        <ComboBox ItemsSource="{Binding Frequencies}" SelectedItem="{Binding Frequency}" Style="{StaticResource EditorComboBoxStyle}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumText}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <TextBlock Text="{loc:Tr Field_FirstDueDate}" Style="{StaticResource FieldLabelStyle}" />
                         <DatePicker SelectedDate="{Binding StartDate, Converter={StaticResource DateOnlyToDateTime}}" Style="{StaticResource EditorDatePickerStyle}" />
-                        <TextBlock Text="End date (optional)" Style="{StaticResource FieldLabelStyle}" />
+                        <TextBlock Text="{loc:Tr Field_EndDateOptional}" Style="{StaticResource FieldLabelStyle}" />
                         <DatePicker SelectedDate="{Binding EndDate, Converter={StaticResource DateOnlyToDateTime}}" Style="{StaticResource EditorDatePickerStyle}" />
-                        <TextBlock Text="Notes" Style="{StaticResource FieldLabelStyle}" />
+                        <TextBlock Text="{loc:Tr Field_Notes}" Style="{StaticResource FieldLabelStyle}" />
                         <TextBox Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60" Style="{StaticResource EditorTextBoxStyle}" />
-                        <TextBlock Text="Changes apply to bills generated from now on." Opacity="0.7" TextWrapping="Wrap" Margin="0,8,0,0" />
+                        <TextBlock Text="{loc:Tr Recurring_ChangesApplyNote}" Opacity="0.7" TextWrapping="Wrap" Margin="0,8,0,0" />
                         <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorTextStyle}"
                                    Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibility}}" />
                         <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
-                            <Button Content="Save" Command="{Binding DataContext.SaveCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource AccentToolbarButtonStyle}" />
-                            <Button Content="Cancel" Command="{Binding DataContext.CancelCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource ToolbarButtonStyle}" />
+                            <Button Content="{loc:Tr Common_Save}" Command="{Binding DataContext.SaveCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource AccentToolbarButtonStyle}" />
+                            <Button Content="{loc:Tr Common_Cancel}" Command="{Binding DataContext.CancelCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource ToolbarButtonStyle}" />
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>

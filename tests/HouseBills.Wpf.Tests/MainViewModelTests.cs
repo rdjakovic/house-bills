@@ -1,0 +1,33 @@
+using CommunityToolkit.Mvvm.Messaging;
+
+using HouseBills.Wpf.Localization;
+using HouseBills.Wpf.Services;
+using HouseBills.Wpf.ViewModels;
+
+using NSubstitute;
+
+namespace HouseBills.Wpf.Tests;
+
+public sealed class MainViewModelTests
+{
+    [Fact]
+    public void Items_Always_HaveSettingsAsTheOnlyFooterItem()
+    {
+        var viewModel = new MainViewModel(Substitute.For<INavigationService>(), new StrongReferenceMessenger());
+
+        viewModel.Items.Where(i => i.IsFooter).ShouldHaveSingleItem().Title.ShouldBe("Settings");
+    }
+
+    [Fact]
+    public void Receive_LanguageChanged_RefreshesMenuTitles()
+    {
+        var messenger = new StrongReferenceMessenger();
+        var viewModel = new MainViewModel(Substitute.For<INavigationService>(), messenger);
+        var refreshed = new List<string?>();
+        viewModel.Items[0].PropertyChanged += (_, e) => refreshed.Add(e.PropertyName);
+
+        messenger.Send(new LanguageChangedMessage(new LanguageOption("sr-Latn-RS", "Srpski")));
+
+        refreshed.ShouldBe([nameof(NavigationItem.Title)]);
+    }
+}

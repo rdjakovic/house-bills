@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>  <data name="Page_Bills" xml:space="preserve">
+    <value>Računi</value>
+  </data>
+  <data name="Page_RecurringBills" xml:space="preserve">
+    <value>Ponavljajući računi</value>
+  </data>
+  <data name="Page_Payees" xml:space="preserve">
+    <value>Primaoci</value>
+  </data>
+  <data name="Page_Categories" xml:space="preserve">
+    <value>Kategorije</value>
+  </data>
+  <data name="Page_Reports" xml:space="preserve">
+    <value>Izveštaji</value>
+  </data>
+  <data name="Page_Settings" xml:space="preserve">
+    <value>Podešavanja</value>
+  </data>
+  <data name="Common_Edit" xml:space="preserve">
+    <value>Izmeni</value>
+  </data>
+  <data name="Common_Delete" xml:space="preserve">
+    <value>Obriši</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>Sačuvaj</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Otkaži</value>
+  </data>
+  <data name="Common_Apply" xml:space="preserve">
+    <value>Primeni</value>
+  </data>
+  <data name="Common_Clear" xml:space="preserve">
+    <value>Poništi</value>
+  </data>
+  <data name="Common_Show" xml:space="preserve">
+    <value>Prikaži</value>
+  </data>
+  <data name="Common_DeleteConfirm" xml:space="preserve">
+    <value>Obrisati „{0}“?</value>
+  </data>
+  <data name="Field_Name" xml:space="preserve">
+    <value>Naziv</value>
+  </data>
+  <data name="Field_Payee" xml:space="preserve">
+    <value>Primalac</value>
+  </data>
+  <data name="Field_Category" xml:space="preserve">
+    <value>Kategorija</value>
+  </data>
+  <data name="Field_Amount" xml:space="preserve">
+    <value>Iznos</value>
+  </data>
+  <data name="Field_Notes" xml:space="preserve">
+    <value>Napomena</value>
+  </data>
+  <data name="Field_Description" xml:space="preserve">
+    <value>Opis</value>
+  </data>
+  <data name="Field_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Field_DueDate" xml:space="preserve">
+    <value>Datum dospeća</value>
+  </data>
+  <data name="Field_AccountReference" xml:space="preserve">
+    <value>Broj korisnika / ugovora</value>
+  </data>
+  <data name="Field_Frequency" xml:space="preserve">
+    <value>Učestalost</value>
+  </data>
+  <data name="Field_FirstDueDate" xml:space="preserve">
+    <value>Prvi datum dospeća</value>
+  </data>
+  <data name="Field_EndDateOptional" xml:space="preserve">
+    <value>Datum završetka (opciono)</value>
+  </data>
+  <data name="Field_PaidOn" xml:space="preserve">
+    <value>Plaćeno dana</value>
+  </data>
+  <data name="Field_AmountPaid" xml:space="preserve">
+    <value>Plaćeni iznos</value>
+  </data>
+  <data name="Column_Due" xml:space="preserve">
+    <value>Dospeće</value>
+  </data>
+  <data name="Column_Paid" xml:space="preserve">
+    <value>Plaćeno</value>
+  </data>
+  <data name="Column_NextDue" xml:space="preserve">
+    <value>Sledeće dospeće</value>
+  </data>
+  <data name="Column_Ends" xml:space="preserve">
+    <value>Završava se</value>
+  </data>
+  <data name="Column_Active" xml:space="preserve">
+    <value>Aktivan</value>
+  </data>
+  <data name="Column_Month" xml:space="preserve">
+    <value>Mesec</value>
+  </data>
+  <data name="Column_BillCount" xml:space="preserve">
+    <value>Broj računa</value>
+  </data>
+  <data name="Column_Total" xml:space="preserve">
+    <value>Ukupno</value>
+  </data>
+  <data name="Column_Outstanding" xml:space="preserve">
+    <value>Neplaćeno</value>
+  </data>
+  <data name="Column_PreviousYear" xml:space="preserve">
+    <value>Prethodna godina</value>
+  </data>
+  <data name="Column_Change" xml:space="preserve">
+    <value>Promena</value>
+  </data>
+  <data name="Bills_New" xml:space="preserve">
+    <value>Novi račun</value>
+  </data>
+  <data name="Bills_RecordPayment" xml:space="preserve">
+    <value>Evidentiraj plaćanje</value>
+  </data>
+  <data name="Bills_MarkUnpaid" xml:space="preserve">
+    <value>Označi kao neplaćen</value>
+  </data>
+  <data name="Bills_GenerateFromRecurring" xml:space="preserve">
+    <value>Generiši iz ponavljajućih</value>
+  </data>
+  <data name="Bills_DueFrom" xml:space="preserve">
+    <value>Dospeva od</value>
+  </data>
+  <data name="Bills_DueTo" xml:space="preserve">
+    <value>Dospeva do</value>
+  </data>
+  <data name="Bills_TotalLabel" xml:space="preserve">
+    <value>Ukupno:</value>
+  </data>
+  <data name="Bills_OutstandingLabel" xml:space="preserve">
+    <value>Neplaćeno:</value>
+  </data>
+  <data name="Bills_AmountDueLabel" xml:space="preserve">
+    <value>Iznos za plaćanje:</value>
+  </data>
+  <data name="Bills_MarkPaid" xml:space="preserve">
+    <value>Označi kao plaćen</value>
+  </data>
+  <data name="Bills_EditorNewTitle" xml:space="preserve">
+    <value>Novi račun</value>
+  </data>
+  <data name="Bills_EditorEditTitle" xml:space="preserve">
+    <value>Izmena računa</value>
+  </data>
+  <data name="Bills_PaymentTitle" xml:space="preserve">
+    <value>Evidentiranje plaćanja</value>
+  </data>
+  <data name="Bills_LoadFailed" xml:space="preserve">
+    <value>Učitavanje računa nije uspelo.</value>
+  </data>
+  <data name="Bills_GenerateFailed" xml:space="preserve">
+    <value>Generisanje računa nije uspelo.</value>
+  </data>
+  <data name="Bills_NoneGenerated" xml:space="preserve">
+    <value>Nema novih računa za generisanje.</value>
+  </data>
+  <data name="Bills_Generated" xml:space="preserve">
+    <value>Broj računa generisanih iz ponavljajućih: {0}.</value>
+  </data>
+  <data name="Bills_DeleteTitle" xml:space="preserve">
+    <value>Brisanje računa</value>
+  </data>
+  <data name="Bills_DeleteConfirm" xml:space="preserve">
+    <value>Obrisati račun „{0}“ sa dospećem {1:d}?</value>
+  </data>
+  <data name="Bills_DeleteFailed" xml:space="preserve">
+    <value>Brisanje računa nije uspelo.</value>
+  </data>
+  <data name="Bills_UpdateFailed" xml:space="preserve">
+    <value>Izmena računa nije uspela.</value>
+  </data>
+  <data name="Recurring_New" xml:space="preserve">
+    <value>Novi ponavljajući račun</value>
+  </data>
+  <data name="Recurring_PauseResume" xml:space="preserve">
+    <value>Pauziraj / nastavi</value>
+  </data>
+  <data name="Recurring_ChangesApplyNote" xml:space="preserve">
+    <value>Izmene važe za račune koji se generišu od sada.</value>
+  </data>
+  <data name="Recurring_EditorNewTitle" xml:space="preserve">
+    <value>Novi ponavljajući račun</value>
+  </data>
+  <data name="Recurring_EditorEditTitle" xml:space="preserve">
+    <value>Izmena ponavljajućeg računa</value>
+  </data>
+  <data name="Recurring_LoadFailed" xml:space="preserve">
+    <value>Učitavanje ponavljajućih računa nije uspelo.</value>
+  </data>
+  <data name="Recurring_UpdateFailed" xml:space="preserve">
+    <value>Izmena ponavljajućeg računa nije uspela.</value>
+  </data>
+  <data name="Recurring_DeleteTitle" xml:space="preserve">
+    <value>Brisanje ponavljajućeg računa</value>
+  </data>
+  <data name="Recurring_DeleteConfirm" xml:space="preserve">
+    <value>Obrisati „{0}“? Već generisani računi ostaju sačuvani.</value>
+  </data>
+  <data name="Recurring_DeleteFailed" xml:space="preserve">
+    <value>Brisanje ponavljajućeg računa nije uspelo.</value>
+  </data>
+  <data name="Payees_New" xml:space="preserve">
+    <value>Novi primalac</value>
+  </data>
+  <data name="Payees_EditorNewTitle" xml:space="preserve">
+    <value>Novi primalac</value>
+  </data>
+  <data name="Payees_EditorEditTitle" xml:space="preserve">
+    <value>Izmena primaoca</value>
+  </data>
+  <data name="Payees_LoadFailed" xml:space="preserve">
+    <value>Učitavanje primalaca nije uspelo.</value>
+  </data>
+  <data name="Payees_DeleteTitle" xml:space="preserve">
+    <value>Brisanje primaoca</value>
+  </data>
+  <data name="Payees_DeleteFailed" xml:space="preserve">
+    <value>Brisanje primaoca nije uspelo.</value>
+  </data>
+  <data name="Categories_New" xml:space="preserve">
+    <value>Nova kategorija</value>
+  </data>
+  <data name="Categories_EditorNewTitle" xml:space="preserve">
+    <value>Nova kategorija</value>
+  </data>
+  <data name="Categories_EditorEditTitle" xml:space="preserve">
+    <value>Izmena kategorije</value>
+  </data>
+  <data name="Categories_LoadFailed" xml:space="preserve">
+    <value>Učitavanje kategorija nije uspelo.</value>
+  </data>
+  <data name="Categories_DeleteTitle" xml:space="preserve">
+    <value>Brisanje kategorije</value>
+  </data>
+  <data name="Categories_DeleteFailed" xml:space="preserve">
+    <value>Brisanje kategorije nije uspelo.</value>
+  </data>
+  <data name="Reports_Year" xml:space="preserve">
+    <value>Godina</value>
+  </data>
+  <data name="Reports_TotalDue" xml:space="preserve">
+    <value>Ukupno za plaćanje</value>
+  </data>
+  <data name="Reports_Paid" xml:space="preserve">
+    <value>Plaćeno</value>
+  </data>
+  <data name="Reports_Outstanding" xml:space="preserve">
+    <value>Neplaćeno</value>
+  </data>
+  <data name="Reports_PreviousYear" xml:space="preserve">
+    <value>Prethodna godina</value>
+  </data>
+  <data name="Reports_ByMonth" xml:space="preserve">
+    <value>Po mesecima</value>
+  </data>
+  <data name="Reports_ByCategory" xml:space="preserve">
+    <value>Po kategorijama</value>
+  </data>
+  <data name="Reports_LoadFailed" xml:space="preserve">
+    <value>Učitavanje izveštaja nije uspelo.</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Jezik</value>
+  </data>
+  <data name="Settings_LanguageNote" xml:space="preserve">
+    <value>Srpski koristi srpske formate (npr. 1.234,56 RSD); engleski koristi regionalna podešavanja Windows-a.</value>
+  </data>
+  <data name="Settings_SaveFailed" xml:space="preserve">
+    <value>Čuvanje podešavanja nije uspelo.</value>
+  </data>
+  <data name="Startup_Title" xml:space="preserve">
+    <value>Pokretanje aplikacije HouseBills…</value>
+  </data>
+  <data name="Startup_Subtitle" xml:space="preserve">
+    <value>Priprema podataka. Prvo pokretanje može malo potrajati.</value>
+  </data>
+  <data name="Error_CheckDatabase" xml:space="preserve">
+    <value>{0} Proverite vezu sa bazom podataka i pokušajte ponovo.</value>
+  </data>
+  <data name="Error_SaveFailed" xml:space="preserve">
+    <value>Čuvanje izmena nije uspelo.</value>
+  </data>
+  <data name="Error_Unexpected" xml:space="preserve">
+    <value>Došlo je do greške. Greška je zabeležena; pokušajte ponovo.</value>
+  </data>
+  <data name="Error_ConfigInvalid" xml:space="preserve">
+    <value>HouseBills ne može da se pokrene jer podešavanja nisu ispravna.</value>
+  </data>
+  <data name="Error_DatabasePrepareFailed" xml:space="preserve">
+    <value>HouseBills nije uspeo da pripremi bazu podataka. Greška je zabeležena; pokušajte ponovo da pokrenete aplikaciju.</value>
+  </data>
+  <data name="Validation_DescriptionRequired" xml:space="preserve">
+    <value>Opis je obavezan.</value>
+  </data>
+  <data name="Validation_NameRequired" xml:space="preserve">
+    <value>Naziv je obavezan.</value>
+  </data>
+  <data name="Validation_SelectPayee" xml:space="preserve">
+    <value>Izaberite primaoca.</value>
+  </data>
+  <data name="Validation_SelectCategory" xml:space="preserve">
+    <value>Izaberite kategoriju.</value>
+  </data>
+  <data name="Validation_AmountRequired" xml:space="preserve">
+    <value>Iznos je obavezan.</value>
+  </data>
+  <data name="Validation_AmountPositive" xml:space="preserve">
+    <value>Iznos mora biti veći od nule.</value>
+  </data>
+  <data name="Validation_DueDateRequired" xml:space="preserve">
+    <value>Datum dospeća je obavezan.</value>
+  </data>
+  <data name="Validation_PaymentDateRequired" xml:space="preserve">
+    <value>Datum plaćanja je obavezan.</value>
+  </data>
+  <data name="Validation_FirstDueDateRequired" xml:space="preserve">
+    <value>Prvi datum dospeća je obavezan.</value>
+  </data>
+  <data name="Validation_MaxLength" xml:space="preserve">
+    <value>Najviše {1} karaktera.</value>
+  </data>
+  <data name="Enum_BillStatus_Upcoming" xml:space="preserve">
+    <value>Predstoji</value>
+  </data>
+  <data name="Enum_BillStatus_DueSoon" xml:space="preserve">
+    <value>Uskoro dospeva</value>
+  </data>
+  <data name="Enum_BillStatus_Overdue" xml:space="preserve">
+    <value>Kasni</value>
+  </data>
+  <data name="Enum_BillStatus_Paid" xml:space="preserve">
+    <value>Plaćen</value>
+  </data>
+  <data name="Enum_BillStatusFilter_All" xml:space="preserve">
+    <value>Svi</value>
+  </data>
+  <data name="Enum_BillStatusFilter_Unpaid" xml:space="preserve">
+    <value>Neplaćeni</value>
+  </data>
+  <data name="Enum_BillStatusFilter_Overdue" xml:space="preserve">
+    <value>Kasne</value>
+  </data>
+  <data name="Enum_BillStatusFilter_Paid" xml:space="preserve">
+    <value>Plaćeni</value>
+  </data>
+  <data name="Enum_BillFrequency_Weekly" xml:space="preserve">
+    <value>Nedeljno</value>
+  </data>
+  <data name="Enum_BillFrequency_Monthly" xml:space="preserve">
+    <value>Mesečno</value>
+  </data>
+  <data name="Enum_BillFrequency_Quarterly" xml:space="preserve">
+    <value>Tromesečno</value>
+  </data>
+  <data name="Enum_BillFrequency_Yearly" xml:space="preserve">
+    <value>Godišnje</value>
+  </data>
+  <data name="DatePicker_Watermark" xml:space="preserve">
+    <value>Izaberite datum</value>
+  </data>
+</root>

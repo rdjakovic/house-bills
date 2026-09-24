@@ -16,6 +16,7 @@
     <ProjectReference Include="..\HouseBills.Application\HouseBills.Application.csproj" />
     <!-- Referenced only by the composition root (Hosting/HostBuilderExtensions.cs). -->
     <ProjectReference Include="..\HouseBills.Infrastructure\HouseBills.Infrastructure.csproj" />
+    <ProjectReference Include="..\HouseBills.Presentation.Resources\HouseBills.Presentation.Resources.csproj" />
   </ItemGroup>
 
   <ItemGroup>

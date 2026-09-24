@@ -1,5 +1,6 @@
 using HouseBills.Application.Common;
 using HouseBills.Application.Persistence;
+using HouseBills.Application.Resources;
 using HouseBills.Domain;
 
 namespace HouseBills.Application.Bills;
@@ -20,9 +21,9 @@ internal sealed class BillService(
     public async Task<Result<int>> SaveAsync(SaveBillRequest request, CancellationToken cancellationToken)
     {
         var errors = new List<string>();
-        FieldValidation.Text(errors, request.Description, Bill.DescriptionMaxLength, "Description", required: true);
-        FieldValidation.Text(errors, request.Notes, Bill.NotesMaxLength, "Notes", required: false);
-        FieldValidation.Amount(errors, request.Amount, "Amount");
+        FieldValidation.Text(errors, request.Description, Bill.DescriptionMaxLength, Messages.Field_Description, required: true);
+        FieldValidation.Text(errors, request.Notes, Bill.NotesMaxLength, Messages.Field_Notes, required: false);
+        FieldValidation.Amount(errors, request.Amount, Messages.Field_Amount);
         await BillReferenceValidation.ValidateAsync(errors, request.PayeeId, request.CategoryId, payees, categories, cancellationToken);
         if (FieldValidation.ToError(errors) is { } validationError)
         {
@@ -39,7 +40,7 @@ internal sealed class BillService(
         var existing = await repository.GetAsync(id, cancellationToken);
         if (existing is null)
         {
-            return Error.NotFound("The bill no longer exists.");
+            return Error.NotFound(Messages.Bill_NotFound);
         }
 
         existing.Update(request.Description, request.PayeeId, request.CategoryId, request.Amount, request.DueDate, request.Notes);
@@ -50,10 +51,10 @@ internal sealed class BillService(
     public async Task<Result> MarkPaidAsync(MarkBillPaidRequest request, CancellationToken cancellationToken)
     {
         var errors = new List<string>();
-        FieldValidation.Amount(errors, request.PaidAmount, "Paid amount");
+        FieldValidation.Amount(errors, request.PaidAmount, Messages.Field_PaidAmount);
         if (request.PaidOn > clock.Today)
         {
-            errors.Add("Payment date cannot be in the future.");
+            errors.Add(Messages.Validation_PaymentInFuture);
         }
 
         if (FieldValidation.ToError(errors) is { } validationError)
@@ -64,7 +65,7 @@ internal sealed class BillService(
         var bill = await repository.GetAsync(request.Id, cancellationToken);
         if (bill is null)
         {
-            return Error.NotFound("The bill no longer exists.");
+            return Error.NotFound(Messages.Bill_NotFound);
         }
 
         bill.MarkPaid(request.PaidOn, request.PaidAmount);
@@ -76,7 +77,7 @@ internal sealed class BillService(
         var bill = await repository.GetAsync(id, cancellationToken);
         if (bill is null)
         {
-            return Error.NotFound("The bill no longer exists.");
+            return Error.NotFound(Messages.Bill_NotFound);
         }
 
         bill.MarkUnpaid();

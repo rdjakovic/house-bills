@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>  <data name="Field_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Field_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Field_Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Field_AccountReference" xml:space="preserve">
+    <value>Account reference</value>
+  </data>
+  <data name="Field_Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="Field_PaidAmount" xml:space="preserve">
+    <value>Paid amount</value>
+  </data>
+  <data name="Validation_Required" xml:space="preserve">
+    <value>{0} is required.</value>
+  </data>
+  <data name="Validation_MaxLength" xml:space="preserve">
+    <value>{0} must be at most {1} characters.</value>
+  </data>
+  <data name="Validation_InvalidAmount" xml:space="preserve">
+    <value>{0} must be greater than zero, with at most two decimal places.</value>
+  </data>
+  <data name="Validation_SelectPayee" xml:space="preserve">
+    <value>Select a payee.</value>
+  </data>
+  <data name="Validation_SelectCategory" xml:space="preserve">
+    <value>Select a category.</value>
+  </data>
+  <data name="Validation_SelectFrequency" xml:space="preserve">
+    <value>Select a frequency.</value>
+  </data>
+  <data name="Validation_EndBeforeStart" xml:space="preserve">
+    <value>End date must not be before the first due date.</value>
+  </data>
+  <data name="Validation_PaymentInFuture" xml:space="preserve">
+    <value>Payment date cannot be in the future.</value>
+  </data>
+  <data name="Category_NameExists" xml:space="preserve">
+    <value>A category named &apos;{0}&apos; already exists.</value>
+  </data>
+  <data name="Category_NotFound" xml:space="preserve">
+    <value>The category no longer exists.</value>
+  </data>
+  <data name="Category_InUse" xml:space="preserve">
+    <value>This category is used by bills or recurring bills and cannot be deleted.</value>
+  </data>
+  <data name="Payee_NameExists" xml:space="preserve">
+    <value>A payee named &apos;{0}&apos; already exists.</value>
+  </data>
+  <data name="Payee_NotFound" xml:space="preserve">
+    <value>The payee no longer exists.</value>
+  </data>
+  <data name="Payee_InUse" xml:space="preserve">
+    <value>This payee is used by bills or recurring bills and cannot be deleted.</value>
+  </data>
+  <data name="Bill_NotFound" xml:space="preserve">
+    <value>The bill no longer exists.</value>
+  </data>
+  <data name="RecurringBill_NotFound" xml:space="preserve">
+    <value>The recurring bill no longer exists.</value>
+  </data>
+  <data name="Conflict" xml:space="preserve">
+    <value>This record was changed or deleted by someone else. Reload and try again.</value>
+  </data>
+</root>

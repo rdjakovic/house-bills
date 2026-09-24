@@ -4,6 +4,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using HouseBills.Application.Categories;
+using HouseBills.Presentation.Resources;
+using HouseBills.Wpf.Localization;
 using HouseBills.Wpf.Services;
 using HouseBills.Wpf.ViewModels.Categories;
 
@@ -14,7 +16,7 @@ namespace HouseBills.Wpf.ViewModels;
 public sealed partial class CategoriesViewModel(ICategoryService categories, IDialogService dialogs, ILogger<CategoriesViewModel> logger)
     : PageViewModel(dialogs, logger)
 {
-    public override string Title => "Categories";
+    public override string Title => Strings.Page_Categories;
 
     public ObservableCollection<CategoryDto> Items { get; } = [];
 
@@ -27,7 +29,7 @@ public sealed partial class CategoriesViewModel(ICategoryService categories, IDi
 
     public override Task OnNavigatedToAsync()
     {
-        return RunAsync(() => LoadAsync(CancellationToken.None), "Could not load categories.");
+        return RunAsync(() => LoadAsync(CancellationToken.None), Strings.Categories_LoadFailed);
     }
 
     [RelayCommand]
@@ -65,13 +67,13 @@ public sealed partial class CategoriesViewModel(ICategoryService categories, IDi
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private async Task DeleteAsync(CancellationToken cancellationToken)
     {
-        if (SelectedItem is not { } item || !Dialogs.Confirm("Delete category", $"Delete '{item.Name}'?"))
+        if (SelectedItem is not { } item || !Dialogs.Confirm(Strings.Categories_DeleteTitle, string.Format(LocalizedStrings.FormattingCulture, Strings.Common_DeleteConfirm, item.Name)))
         {
             return;
         }
 
         Editor = null;
-        await ExecuteAndReloadAsync(() => categories.DeleteAsync(item.Id, item.RowVersion, cancellationToken), () => LoadAsync(cancellationToken), "Could not delete the category.");
+        await ExecuteAndReloadAsync(() => categories.DeleteAsync(item.Id, item.RowVersion, cancellationToken), () => LoadAsync(cancellationToken), Strings.Categories_DeleteFailed);
     }
 
     private bool HasSelection() => SelectedItem is not null;

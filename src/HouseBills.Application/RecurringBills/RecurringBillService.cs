@@ -1,6 +1,7 @@
 using HouseBills.Application.Bills;
 using HouseBills.Application.Common;
 using HouseBills.Application.Persistence;
+using HouseBills.Application.Resources;
 using HouseBills.Domain;
 
 using Microsoft.Extensions.Logging;
@@ -33,17 +34,17 @@ internal sealed class RecurringBillService(
     public async Task<Result<int>> SaveAsync(SaveRecurringBillRequest request, CancellationToken cancellationToken)
     {
         var errors = new List<string>();
-        FieldValidation.Text(errors, request.Name, RecurringBill.NameMaxLength, "Name", required: true);
-        FieldValidation.Text(errors, request.Notes, RecurringBill.NotesMaxLength, "Notes", required: false);
-        FieldValidation.Amount(errors, request.Amount, "Amount");
+        FieldValidation.Text(errors, request.Name, RecurringBill.NameMaxLength, Messages.Field_Name, required: true);
+        FieldValidation.Text(errors, request.Notes, RecurringBill.NotesMaxLength, Messages.Field_Notes, required: false);
+        FieldValidation.Amount(errors, request.Amount, Messages.Field_Amount);
         if (!Enum.IsDefined(request.Frequency))
         {
-            errors.Add("Select a frequency.");
+            errors.Add(Messages.Validation_SelectFrequency);
         }
 
         if (request.EndDate < request.StartDate)
         {
-            errors.Add("End date must not be before the first due date.");
+            errors.Add(Messages.Validation_EndBeforeStart);
         }
 
         await BillReferenceValidation.ValidateAsync(errors, request.PayeeId, request.CategoryId, payees, categories, cancellationToken);
@@ -63,7 +64,7 @@ internal sealed class RecurringBillService(
         var existing = await repository.GetAsync(id, cancellationToken);
         if (existing is null)
         {
-            return Error.NotFound("The recurring bill no longer exists.");
+            return Error.NotFound(Messages.RecurringBill_NotFound);
         }
 
         existing.Update(request.Name, request.PayeeId, request.CategoryId, request.Amount, schedule, request.Notes);
@@ -76,7 +77,7 @@ internal sealed class RecurringBillService(
         var existing = await repository.GetAsync(id, cancellationToken);
         if (existing is null)
         {
-            return Error.NotFound("The recurring bill no longer exists.");
+            return Error.NotFound(Messages.RecurringBill_NotFound);
         }
 
         existing.SetActive(isActive, clock.Today);

@@ -4,7 +4,9 @@ using System.Windows.Markup;
 using System.Windows.Threading;
 
 using HouseBills.Application.Common;
+using HouseBills.Presentation.Resources;
 using HouseBills.Wpf.Hosting;
+using HouseBills.Wpf.Localization;
 using HouseBills.Wpf.Views;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -15,8 +17,6 @@ namespace HouseBills.Wpf;
 
 public partial class App : System.Windows.Application
 {
-    private const string UnexpectedErrorMessage = "Something went wrong. The error has been logged; please try again.";
-
     /// <summary>Quick starts finish before this, so the startup window doesn't flash.</summary>
     private static readonly TimeSpan StartupWindowDelay = TimeSpan.FromMilliseconds(700);
 
@@ -27,11 +27,6 @@ public partial class App : System.Windows.Application
         base.OnStartup(e);
         RegisterGlobalExceptionHandlers();
 
-        // Make bindings (dates, amounts) format and parse using the user's regional settings instead of en-US.
-        FrameworkElement.LanguageProperty.OverrideMetadata(
-            typeof(FrameworkElement),
-            new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
-
         try
         {
             _host = HostBuilderExtensions.CreateHost(e.Args);
@@ -41,13 +36,24 @@ public partial class App : System.Windows.Application
         {
             // The host (and therefore logging) is not available; report configuration errors directly.
             MessageBox.Show(
-                $"HouseBills could not start because its configuration is invalid.{Environment.NewLine}{Environment.NewLine}{ex.Message}",
+                $"{Strings.Error_ConfigInvalid}{Environment.NewLine}{Environment.NewLine}{ex.Message}",
                 "HouseBills",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
             Shutdown(1);
             return;
         }
+
+        // Before any window is shown, so every window (including the startup window) uses the chosen language.
+        var localization = _host.Services.GetRequiredService<ILocalizationService>();
+        await localization.InitializeAsync(CancellationToken.None);
+        DatePickerWatermark.Register();
+
+        // Bindings (dates, number input) format and parse with the chosen language's formats instead of WPF's en-US
+        // default. This default can be set only once; later language changes update open windows directly.
+        FrameworkElement.LanguageProperty.OverrideMetadata(
+            typeof(FrameworkElement),
+            new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(localization.FormattingCulture.IetfLanguageTag)));
 
         var startupWindow = await InitializeDatabaseAsync(_host.Services);
 
@@ -93,7 +99,7 @@ public partial class App : System.Windows.Application
             Logger?.LogError(ex, "Database initialization failed.");
             startupWindow?.Hide();
             MessageBox.Show(
-                "HouseBills could not prepare its database. The error has been logged; please try restarting the application.",
+                Strings.Error_DatabasePrepareFailed,
                 "HouseBills",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
@@ -112,7 +118,7 @@ public partial class App : System.Windows.Application
     private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
         Logger?.LogError(e.Exception, "Unhandled exception on the UI thread.");
-        MessageBox.Show(UnexpectedErrorMessage, "HouseBills", MessageBoxButton.OK, MessageBoxImage.Error);
+        MessageBox.Show(Strings.Error_Unexpected, "HouseBills", MessageBoxButton.OK, MessageBoxImage.Error);
         e.Handled = true;
     }
 
@@ -125,7 +131,7 @@ public partial class App : System.Windows.Application
     private void OnAppDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         Logger?.LogCritical(e.ExceptionObject as Exception, "Unhandled exception; the application will terminate.");
-        MessageBox.Show(UnexpectedErrorMessage, "HouseBills", MessageBoxButton.OK, MessageBoxImage.Error);
+        MessageBox.Show(Strings.Error_Unexpected, "HouseBills", MessageBoxButton.OK, MessageBoxImage.Error);
     }
 
     private ILogger? Logger => _host?.Services.GetService<ILogger<App>>();

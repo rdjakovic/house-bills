@@ -6,6 +6,8 @@ using CommunityToolkit.Mvvm.Input;
 
 using HouseBills.Application.Common;
 using HouseBills.Application.Reports;
+using HouseBills.Presentation.Resources;
+using HouseBills.Wpf.Localization;
 using HouseBills.Wpf.Services;
 using HouseBills.Wpf.ViewModels.Reports;
 
@@ -28,7 +30,7 @@ public sealed partial class ReportsViewModel : PageViewModel
         SelectedYear = currentYear;
     }
 
-    public override string Title => "Reports";
+    public override string Title => Strings.Page_Reports;
 
     public IReadOnlyList<int> Years { get; }
 
@@ -59,7 +61,7 @@ public sealed partial class ReportsViewModel : PageViewModel
     [RelayCommand]
     private Task RefreshAsync(CancellationToken cancellationToken)
     {
-        return RunAsync(() => LoadAsync(SelectedYear, cancellationToken), "Could not load reports.");
+        return RunAsync(() => LoadAsync(SelectedYear, cancellationToken), Strings.Reports_LoadFailed);
     }
 
     private async Task LoadAsync(int year, CancellationToken cancellationToken)
@@ -68,12 +70,15 @@ public sealed partial class ReportsViewModel : PageViewModel
         var categories = await _reports.GetCategoryTotalsAsync(new DateOnly(year, 1, 1), new DateOnly(year, 12, 31), cancellationToken);
 
         var max = months.Count == 0 ? 0m : months.Max(m => m.TotalAmount);
-        var monthNames = CultureInfo.CurrentCulture.DateTimeFormat;
+        // Month names follow the UI language (Serbian names are lowercase, so capitalize for the table).
+        var uiCulture = LocalizedStrings.Culture;
+        var monthNames = uiCulture.DateTimeFormat;
         Months.Clear();
         foreach (var month in months)
         {
             var fraction = max == 0m ? 0d : (double)(month.TotalAmount / max);
-            Months.Add(new MonthlySummaryItem(monthNames.GetMonthName(month.Month), month, fraction));
+            var monthName = monthNames.GetMonthName(month.Month);
+            Months.Add(new MonthlySummaryItem(uiCulture.TextInfo.ToUpper(monthName[0]) + monthName[1..], month, fraction));
         }
 
         CategoryTotals.Clear();

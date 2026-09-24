@@ -22,4 +22,9 @@
     <Using Include="Shouldly" />
   </ItemGroup>
 
+  <!-- Run tests in English regardless of the Windows display language (assertions check English texts). -->
+  <ItemGroup>
+    <Content Include="..\xunit.runner.json" Link="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
