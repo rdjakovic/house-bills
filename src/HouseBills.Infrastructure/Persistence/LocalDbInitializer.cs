@@ -28,6 +28,12 @@ internal sealed class LocalDbInitializer(IDbContextFactory<AppDbContext> context
         EXEC sys.sp_executesql @sql;
         """;
 
+    /// <summary>
+    /// Waits before each retry. LocalDB sometimes fails to start its instance ("error 50 … SQL Server process failed
+    /// to start"), e.g. right after another process using it was killed; a later attempt then succeeds.
+    /// </summary>
+    internal IReadOnlyList<TimeSpan> RetryDelays { get; init; } = [TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(5)];
+
     public async Task InitializeAsync(CancellationToken cancellationToken)
     {
         await using var db = await contextFactory.CreateDbContextAsync(cancellationToken);
@@ -38,6 +44,29 @@ internal sealed class LocalDbInitializer(IDbContextFactory<AppDbContext> context
             return;
         }
 
+        // Every step below is idempotent (check, re-attach, migrate), so retrying a failed attempt is safe.
+        for (var attempt = 0; ; attempt++)
+        {
+            try
+            {
+                await PrepareAsync(db, connection, cancellationToken);
+                return;
+            }
+            catch (SqlException ex) when (attempt < RetryDelays.Count)
+            {
+                logger.LogWarning(ex, "Could not prepare the LocalDB database (attempt {Attempt}); retrying in {Delay}.", attempt + 1, RetryDelays[attempt]);
+                await Task.Delay(RetryDelays[attempt], cancellationToken);
+            }
+        }
+    }
+
+    internal static bool IsLocalDb(string? dataSource)
+    {
+        return dataSource?.TrimStart().StartsWith(@"(localdb)\", StringComparison.OrdinalIgnoreCase) == true;
+    }
+
+    private async Task PrepareAsync(AppDbContext db, SqlConnectionStringBuilder connection, CancellationToken cancellationToken)
+    {
         await ReattachIfDetachedAsync(connection, cancellationToken);
 
         var pending = (await db.Database.GetPendingMigrationsAsync(cancellationToken)).ToList();
@@ -48,11 +77,6 @@ internal sealed class LocalDbInitializer(IDbContextFactory<AppDbContext> context
 
         logger.LogInformation("Applying {MigrationCount} migration(s) to the LocalDB database: {Migrations}", pending.Count, pending);
         await db.Database.MigrateAsync(cancellationToken);
-    }
-
-    internal static bool IsLocalDb(string? dataSource)
-    {
-        return dataSource?.TrimStart().StartsWith(@"(localdb)\", StringComparison.OrdinalIgnoreCase) == true;
     }
 
     /// <summary>

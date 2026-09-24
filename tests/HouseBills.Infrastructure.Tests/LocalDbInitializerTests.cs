@@ -60,6 +60,32 @@ public sealed class LocalDbInitializerTests : IAsyncDisposable
         payees.ShouldHaveSingleItem().Name.ShouldBe("Kept payee");
     }
 
+    [Fact]
+    public async Task InitializeAsync_LocalDbKeepsFailing_RetriesThenThrows()
+    {
+        await SkipUnlessLocalDbAsync();
+
+        // A missing named instance fails like a LocalDB start-up glitch (error 50), but deterministically.
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                [$"ConnectionStrings:{DependencyInjection.ConnectionStringName}"] =
+                    @"Server=(localdb)\HouseBillsNoSuchInstance;Database=HouseBills;Integrated Security=True;Connect Timeout=5",
+            })
+            .Build();
+        var services = new ServiceCollection().AddLogging().AddInfrastructure(configuration).BuildServiceProvider();
+        _providers.Add(services);
+        var logger = new CountingLogger<LocalDbInitializer>();
+        var initializer = new LocalDbInitializer(services.GetRequiredService<Microsoft.EntityFrameworkCore.IDbContextFactory<AppDbContext>>(), logger)
+        {
+            RetryDelays = [TimeSpan.Zero, TimeSpan.Zero],
+        };
+
+        await Should.ThrowAsync<SqlException>(() => initializer.InitializeAsync(Ct));
+
+        logger.Warnings.ShouldBe(2);
+    }
+
     public async ValueTask DisposeAsync()
     {
         foreach (var provider in _providers)
